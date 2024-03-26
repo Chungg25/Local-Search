@@ -1,5 +1,4 @@
-
-
+import random
 class LocalSearchStrategy:
     def random_restart_hill_climbing(problem, num_trial):
         best_path = None
@@ -21,12 +20,33 @@ class LocalSearchStrategy:
         
         return best_path
     
-    # def simulated_annealing_search(problem, schedule):
-    #     best_path = None
-    #     best_evaluation = float('-inf') 
+    def simulated_annealing_search(problem, schedule):
+        best_path = None
+        best_evaluation = float('-inf') 
+        current_state = [problem.random_state()]
+        current_enery = problem.evaluation(current_state[0][0], current_state[0][1])
+        path = [(current_state[0], current_state[1], current_state[2])]
+        T = 2
+        while T > 0:
+            T = schedule(T)
+            if T == 0:
+                return path
+            neighbor = []
+            for state in current_state:
+                for i in problem.get_neighbors(state):
+                    if (i[0], i[1], i[2]) not in explored:
+                        neighbor.append(i)
+                        explored.append((i[0], i[1], i[2]))
+            next_state = problem.random_neighbors(neighbor)
+            next_enery = problem.evaluation(next_state[0], next_state[1])
+            delta_e = next_enery - current_enery
 
-    #     T = schedule
-    #     while T > 0:
+            if delta_e < 0 or random.random() < math.exp(delta_e / T):
+                current_state = next_state
+                current_enery = next_enery
+                path.append((current_state[0], current_state[1], current_state[2]))
+        
+        return path
 
     def local_beam_search(problem, k):
         best_path = []
@@ -52,7 +72,6 @@ class LocalSearchStrategy:
 
             
             if problem.is_goal(current_state):
-                print('1')
                 goal = problem.find_goal(current_state)
                 best_path = problem.find_path(goal, state_start)
                 break

@@ -64,6 +64,9 @@ class Problem:
         x, y = random.choice(list(zip(self.X, self.Y)))
         z = self.evaluation(x, y)
         return (x, y, z, self)
+    
+    def random_neighbors(self, neighbors):
+        return random.choice(neighbors)
 
     def show(self, title):
         fig = plt.figure(figsize=(8, 6))
