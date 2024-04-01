@@ -50,7 +50,7 @@ class Problem:
     def get_neighbors(self, state):
         x, y, z, _ = state
         neighbors = []
-        for dx in [-1, 0, 1]:
+        for dx in [0]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
                     continue

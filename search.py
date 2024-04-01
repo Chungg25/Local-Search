@@ -1,4 +1,5 @@
 import random
+import math
 class LocalSearchStrategy:
     def random_restart_hill_climbing(problem, num_trial):
         best_path = None
@@ -21,36 +22,43 @@ class LocalSearchStrategy:
         return best_path
     
     def simulated_annealing_search(problem, schedule):
-        best_path = None
-        best_evaluation = float('-inf') 
         current_state = [problem.random_state()]
-        current_enery = problem.evaluation(current_state[0][0], current_state[0][1])
-        path = [(current_state[0], current_state[1], current_state[2])]
+        start_state = current_state[0]
+        current_enery = int(problem.evaluation(current_state[0][0], current_state[0][1]))
+        path = [(current_state[0][0], current_state[0][1], current_state[0][2])]
+        explored = [(current_state[0][0], current_state[0][1], current_state[0][2])]
+        neighbor = []
+        flag = False
         T = 2
         while T > 0:
             T = schedule(T)
             if T == 0:
                 return path
-            neighbor = []
-            for state in current_state:
-                for i in problem.get_neighbors(state):
-                    if (i[0], i[1], i[2]) not in explored:
-                        neighbor.append(i)
-                        explored.append((i[0], i[1], i[2]))
+            
+            if flag:
+                neighbor = []
+                explored = []
+                
+            for i in problem.get_neighbors(start_state):
+                if (i[0], i[1], i[2]) not in explored:
+                    neighbor.append(i)
+                    explored.append((i[0], i[1], i[2]))
+            
             next_state = problem.random_neighbors(neighbor)
-            next_enery = problem.evaluation(next_state[0], next_state[1])
+            next_enery = int(problem.evaluation(next_state[0], next_state[1]))
             delta_e = next_enery - current_enery
-
-            if delta_e < 0 or random.random() < math.exp(delta_e / T):
-                current_state = next_state
+            
+            if delta_e > 0 or random.random() < math.exp(delta_e / T):
+                start_state = next_state 
                 current_enery = next_enery
-                path.append((current_state[0], current_state[1], current_state[2]))
-        
+                path.append((start_state[0], start_state[1], start_state[2]))
+                continue
+            flag = True
+
         return path
 
     def local_beam_search(problem, k):
         best_path = []
-        best_evaluation = float('-inf') 
         current_state = [problem.random_state()]
         state_start = current_state[0]
         explored = []
@@ -68,9 +76,6 @@ class LocalSearchStrategy:
 
             current_state = sorted(neighbor, key=lambda x: x[2], reverse=True)[:k]
 
-            
-
-            
             if problem.is_goal(current_state):
                 goal = problem.find_goal(current_state)
                 best_path = problem.find_path(goal, state_start)

@@ -26,7 +26,7 @@ def test_simulated_annealing_search(title):
     if best_path:
         problem.draw_path(best_path, title)
 
-test_hill_climbing('hill_climbing')
-test_local_beam_search('local_beam_search')
-test_local_beam_search('simulated_annealing_search')
+# test_hill_climbing('hill_climbing')
+# test_local_beam_search('local_beam_search')
+test_simulated_annealing_search('simulated_annealing_search')
 
