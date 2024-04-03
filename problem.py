@@ -29,6 +29,8 @@ class Problem:
                 return True
         return False
     
+    #jdnsd
+    
     def find_goal(self, current):
         for i in current:
             _, _, z, _ = i
