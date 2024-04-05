@@ -5,10 +5,11 @@ import random
 
 
 class Problem:
-    def __init__(self, filename, parent=None):
+    def __init__(self, filename, parent=None, state_start=None):
         self.filename = filename
         self.load_state_space()
         self.parent = parent
+        self.state_start = state_start
 
     def load_state_space(self):
         img = cv2.imread(self.filename, cv2.IMREAD_GRAYSCALE)
@@ -23,36 +24,29 @@ class Problem:
         return self.Z[y, x] 
 
     def is_goal(self, current):
-        for i in current:
-            _, _, z, _ = i
-            if z == np.max(self.Z):
-                return True
+        _, _, z, _ = current
+        if z == np.max(self.Z):
+            return True
         return False
     
-    def find_goal(self, current):
-        for i in current:
-            _, _, z, _ = i
-            if z == np.max(self.Z):
-                return i
-    
-    def find_path(self, goal, state_start):
+    def find_path(self, goal):
         best_path = []
         while len(goal) != 0:
             x, y, z, parent = goal
             best_path.insert(0, (x, y, z))
             goal = parent
             if isinstance(goal, tuple) == False:
-                x, y, z, t = state_start
-                best_path.insert(0, (x,y,z))
                 break
         return best_path
     
     def get_neighbors(self, state):
         x, y, z, _ = state
         neighbors = []
-        for dx in [0]:
+        for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
+                    continue
+                if dx != 0 and dy != 0:
                     continue
                 new_x = x + dx
                 new_y = y + dy
@@ -91,4 +85,3 @@ class Problem:
         ax.set_zlabel('Z')
         ax.set_title(title)
         plt.show()
-

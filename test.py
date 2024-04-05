@@ -13,20 +13,20 @@ def test_hill_climbing(title):
         problem.draw_path(best_path, title)
 
 def test_local_beam_search(title):
-    problem = Problem('monalisa.jpg')
-    best_path = LocalSearchStrategy.local_beam_search(problem, 20)
+    problem = Problem('monalisa.jpg', state_start=(40, 60))
+    best_path = LocalSearchStrategy.local_beam_search(problem, 1)
     print(best_path)
     if best_path:
         problem.draw_path(best_path, title)
 
 def test_simulated_annealing_search(title):
-    problem = Problem('monalisa.jpg')
+    problem = Problem('monalisa.jpg', state_start=(40, 60))
     best_path = LocalSearchStrategy.simulated_annealing_search(problem, schedule)
     print(best_path)
     if best_path:
         problem.draw_path(best_path, title)
 
-# test_hill_climbing('hill_climbing')
-# test_local_beam_search('local_beam_search')
+test_hill_climbing('hill_climbing')
+test_local_beam_search('local_beam_search')
 test_simulated_annealing_search('simulated_annealing_search')
 
