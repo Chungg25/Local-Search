@@ -29,6 +29,7 @@ class LocalSearchStrategy:
         if problem.is_goal(start_state): return [(x, y, current_enery)]
 
         explored = [(start_state[0], start_state[1])]
+
         T = 2
         while T > 0:
             T = schedule(T)
@@ -67,25 +68,25 @@ class LocalSearchStrategy:
 
         explored = []
         best_path = []
+
         while True:
             neighbor = []
             for state in current_state:
                 for i in problem.get_neighbors(state):
                     if (i[0], i[1]) not in explored:
                         neighbor.append(i)
-            
+            print(neighbor)
             if len(neighbor) == 0:
                 best_path = problem.find_path(current_state[0])
                 break
 
             current_state = sorted(neighbor, key=lambda x: x[2], reverse=True)[:k]
             
-            for i in current_state:
-                explored.append((i[0], i[1]))
-
             for state in current_state:
+                explored.append((state[0], state[1]))
                 if problem.is_goal(state):
                     return problem.find_path(state)
+                
                 
         return best_path
 
