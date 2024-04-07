@@ -22,21 +22,19 @@ class LocalSearchStrategy:
         return best_path
     
     def simulated_annealing_search(problem, schedule):
-        x, y = problem.state_start
-        current_enery = int(problem.evaluation(x, y))
-        start_state = (x, y, current_enery, problem)
+        start_state = problem.initial_state
+        current_enery = start_state[2]
 
-        if problem.is_goal(start_state): return [(x, y, current_enery)]
-
-        explored = [(start_state[0], start_state[1])]
+        explored = [problem.state_start]
 
         T = 2
         while T > 0:
-            T = schedule(T)
 
-            if T == 0:
+            if T == 0 or problem.is_goal(start_state):
                 return problem.find_path(start_state)
             
+            T = schedule(T)
+
             neighbor = []
                 
             for i in problem.get_neighbors(start_state):
@@ -50,7 +48,7 @@ class LocalSearchStrategy:
             explored.append((next_state[0], next_state[1]))
             next_enery = int(problem.evaluation(next_state[0], next_state[1]))
             delta_e = next_enery - current_enery
-            
+
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 start_state = next_state 
                 current_enery = next_enery
@@ -58,24 +56,23 @@ class LocalSearchStrategy:
         return problem.find_path(start_state)
 
     def local_beam_search(problem, k):
-        x, y = problem.state_start
-        current_enery = int(problem.evaluation(x, y))
-        current_state = [(x, y, current_enery, problem)]
+        current_state = [problem.initial_state]
 
-        state_start = current_state[0]
+        if problem.is_goal(current_state[0]): return [(x, y, current_state[0][2])]
 
-        if problem.is_goal(state_start): return [(x, y, current_enery)]
+        explored = [problem.state_start]
 
         explored = []
         best_path = []
 
         while True:
             neighbor = []
+
             for state in current_state:
                 for i in problem.get_neighbors(state):
                     if (i[0], i[1]) not in explored:
                         neighbor.append(i)
-            print(neighbor)
+
             if len(neighbor) == 0:
                 best_path = problem.find_path(current_state[0])
                 break
@@ -86,7 +83,6 @@ class LocalSearchStrategy:
                 explored.append((state[0], state[1]))
                 if problem.is_goal(state):
                     return problem.find_path(state)
-                
                 
         return best_path
 

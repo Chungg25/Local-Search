@@ -10,6 +10,11 @@ class Problem:
         self.load_state_space()
         self.parent = parent
         self.state_start = state_start
+        self.initial_state = self.get_initial_state()
+
+    def get_initial_state(self):
+        x, y = self.state_start
+        return (x, y, self.evaluation(x, y), self)
 
     def load_state_space(self):
         img = cv2.imread(self.filename, cv2.IMREAD_GRAYSCALE)
@@ -21,7 +26,7 @@ class Problem:
         self.Z = img
 
     def evaluation(self, x, y):
-        return self.Z[y, x] 
+        return self.Z[y, x]
 
     def is_goal(self, current):
         _, _, z, _ = current
