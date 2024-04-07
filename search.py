@@ -61,8 +61,6 @@ class LocalSearchStrategy:
         if problem.is_goal(current_state[0]): return [(x, y, current_state[0][2])]
 
         explored = [problem.state_start]
-
-        explored = []
         best_path = []
 
         while True:
