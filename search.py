@@ -28,8 +28,8 @@ class LocalSearchStrategy:
         start_state = problem
         current_enery = int(start_state.evaluation())
 
-        T = 500
-        while T > 0.01:
+        T = 1000
+        while T > 0.1:
             neighbors = []
             T = schedule(T)
             
@@ -42,8 +42,7 @@ class LocalSearchStrategy:
             next_state = start_state.random_neighbors(neighbors)
             next_enery = int(next_state.evaluation())
             delta_e = next_enery - current_enery
-            a = random.random()
-            if delta_e > 0 or a < math.exp(delta_e / T):
+            if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 start_state = next_state 
                 current_enery = next_enery
             else:
@@ -55,44 +54,26 @@ class LocalSearchStrategy:
     def local_beam_search(problem, k):
         current_state = [problem]
         best_path = []
-
         while True:
             neighbors = []
-
-            for state in current_state:
-                for neighbor in state.get_neighbors():
-                    neighbors.append(neighbor)
+            neighbors_state = []
             
-            state = current_state[0]
-            current_state = sorted(neighbors, key=lambda problem: problem.evaluation(), reverse=True)[:k]
-            if current_state[0].evaluation() < state.evaluation():
-                best_path = state.find_path()
-                break
-                
-        return best_path
-
-
-
-
-    def local_beam_search(problem, k):
-        current_state = [problem]
-        best_path = []
-
-        while True:
-            neighbors = []
-
             for state in current_state:
                 for neighbor in state.get_neighbors():
-                    neighbors.append(neighbor)
+                    if neighbor.state_start not in neighbors_state:
+                        neighbors.append(neighbor)
+                        neighbors_state.append(neighbor.state_start)
             
             if current_state[0].parent != None:
                 state = current_state[0].parent
             else:
                 state = current_state[0]
+            
             current_state = sorted(neighbors, key=lambda problem: problem.evaluation(), reverse=True)[:k]
             if current_state[0].state_start == state.state_start and current_state[0].evaluation() <= state.evaluation():
                 best_path = state.find_path()
                 break
+            
                 
         return best_path
 

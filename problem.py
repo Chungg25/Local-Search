@@ -10,7 +10,7 @@ class Problem:
         self.load_state_space()
         self.parent = parent
         self.state_start = state_start
-
+    
     def get_initial_state(self):
         x, y = self.state_start
         return (x, y, self.evaluation(), self)
