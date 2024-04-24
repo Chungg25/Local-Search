@@ -26,7 +26,7 @@ class LocalSearchStrategy:
     
     def simulated_annealing_search(problem, schedule):
         start_state = problem
-        current_enery = int(start_state.evaluation())
+        current_energy = int(start_state.evaluation())
 
         T = 1000
         while T > 0.1:
@@ -40,11 +40,11 @@ class LocalSearchStrategy:
                 break
             
             next_state = start_state.random_neighbors(neighbors)
-            next_enery = int(next_state.evaluation())
-            delta_e = next_enery - current_enery
+            next_energy = int(next_state.evaluation())
+            delta_e = next_energy - current_energy
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 start_state = next_state 
-                current_enery = next_enery
+                current_energy = next_energy
             else:
                 break
             
