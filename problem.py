@@ -10,11 +10,10 @@ class Problem:
         self.load_state_space()
         self.parent = parent
         self.state_start = state_start
-        self.initial_state = self.get_initial_state()
-
+    
     def get_initial_state(self):
         x, y = self.state_start
-        return (x, y, self.evaluation(x, y), self)
+        return (x, y, self.evaluation(), self)
 
     def load_state_space(self):
         img = cv2.imread(self.filename, cv2.IMREAD_GRAYSCALE)
@@ -25,27 +24,24 @@ class Problem:
         self.Y = np.arange(self.h)
         self.Z = img
 
-    def evaluation(self, x, y):
+    def evaluation(self):
+        x, y = self.state_start
         return self.Z[y, x]
 
-    def is_goal(self, current):
-        _, _, z, _ = current
-        if z == np.max(self.Z):
-            return True
-        return False
-    
-    def find_path(self, goal):
+    def find_path(self):
+        p = self
         best_path = []
-        while len(goal) != 0:
-            x, y, z, parent = goal
-            best_path.insert(0, (x, y, z))
-            goal = parent
-            if isinstance(goal, tuple) == False:
+        while p is not None:
+            if p.state_start == None:
                 break
+            x, y = p.state_start
+            z = p.evaluation()
+            best_path.insert(0, (x, y, z))
+            p = p.parent
         return best_path
-    
-    def get_neighbors(self, state):
-        x, y, z, _ = state
+
+    def get_neighbors(self):
+        x, y = self.state_start
         neighbors = []
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
@@ -56,13 +52,12 @@ class Problem:
                 new_x = x + dx
                 new_y = y + dy
                 if 0 <= new_x < len(self.X) and 0 <= new_y < len(self.Y):
-                    neighbors.append((new_x, new_y, self.evaluation(new_x, new_y), state))
+                    neighbors.append(Problem(filename=self.filename, parent=self, state_start=(new_x, new_y)))
         return neighbors
 
     def random_state(self):
         x, y = random.choice(list(zip(self.X, self.Y)))
-        z = self.evaluation(x, y)
-        return (x, y, z, self)
+        return Problem(filename=self.filename, parent=self, state_start = (x, y))
     
     def random_neighbors(self, neighbors):
         return random.choice(neighbors)

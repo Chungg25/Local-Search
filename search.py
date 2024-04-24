@@ -6,84 +6,72 @@ class LocalSearchStrategy:
         best_evaluation = float('-inf') 
 
         for _ in range(num_trial):
+
             current_state = problem.random_state()
+
             while True:
-                neighbors = problem.get_neighbors(current_state)
-                next_state = max(neighbors, key=lambda x: x[2])
-                if next_state[2] <= current_state[2]:
+                neighbors = current_state.get_neighbors()
+
+                next_state = max(neighbors, key=lambda problem: problem.evaluation())
+                if next_state.evaluation() <= current_state.evaluation():
                     break
+
                 current_state = next_state
-                if problem.is_goal(next_state):
-                    return problem.find_path(next_state)
-            if problem.evaluation(current_state[0], current_state[1]) > best_evaluation: 
-                best_evaluation = current_state[2]
-                best_path = problem.find_path(current_state)
+
+            if current_state.evaluation() > best_evaluation: 
+                best_evaluation = current_state.evaluation()
+                best_path = current_state.find_path()
                 
         return best_path
     
     def simulated_annealing_search(problem, schedule):
-        start_state = problem.initial_state
-        current_enery = start_state[2]
+        start_state = problem
+        current_energy = int(start_state.evaluation())
 
-        explored = [problem.state_start]
-
-        T = 2
-        while T > 0:
-
-            if T == 0 or problem.is_goal(start_state):
-                return problem.find_path(start_state)
-            
+        T = 1000
+        while T > 0.1:
+            neighbors = []
             T = schedule(T)
-
-            neighbor = []
-                
-            for i in problem.get_neighbors(start_state):
-                if (i[0], i[1]) not in explored:
-                    neighbor.append(i)
-
-            if len(neighbor) == 0:
-                return problem.find_path(start_state)
-
-            next_state = problem.random_neighbors(neighbor)
-            explored.append((next_state[0], next_state[1]))
-            next_enery = int(problem.evaluation(next_state[0], next_state[1]))
-            delta_e = next_enery - current_enery
-
+            
+            for neighbor in start_state.get_neighbors():
+                neighbors.append(neighbor)
+            
+            next_state = start_state.random_neighbors(neighbors)
+            next_energy = int(next_state.evaluation())
+            delta_e = next_energy - current_energy
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 start_state = next_state 
-                current_enery = next_enery
+                current_energy = next_energy
+            else:
+                break
+            
+        return start_state.find_path()
 
-        return problem.find_path(start_state)
 
     def local_beam_search(problem, k):
-        current_state = [problem.initial_state]
-
-        if problem.is_goal(current_state[0]): return [(x, y, current_state[0][2])]
-
-        explored = [problem.state_start]
+        current_state = [problem]
         best_path = []
-
         while True:
-            neighbor = []
-
-            for state in current_state:
-                for i in problem.get_neighbors(state):
-                    if (i[0], i[1]) not in explored:
-                        neighbor.append(i)
-
-            if len(neighbor) == 0:
-                best_path = problem.find_path(current_state[0])
-                break
-
-            current_state = sorted(neighbor, key=lambda x: x[2], reverse=True)[:k]
+            neighbors = []
+            neighbors_state = []
             
             for state in current_state:
-                explored.append((state[0], state[1]))
-                if problem.is_goal(state):
-                    return problem.find_path(state)
-                
+                for neighbor in state.get_neighbors():
+                    if neighbor.state_start not in neighbors_state:
+                        neighbors.append(neighbor)
+                        neighbors_state.append(neighbor.state_start)
+            
+            if current_state[0].parent != None:
+                state = current_state[0].parent
+            else:
+                state = current_state[0]
+            
+            current_state = sorted(neighbors, key=lambda problem: problem.evaluation(), reverse=True)[:k]
+            if current_state[0].state_start == state.state_start and current_state[0].evaluation() <= state.evaluation():
+                best_path = state.find_path()
+                break
+        
         return best_path
-
 
 
 
