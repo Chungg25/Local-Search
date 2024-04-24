@@ -38,8 +38,6 @@ class Problem:
             p = p.parent
         return best_path
 
-    
-    
     def get_neighbors(self):
         x, y = self.state_start
         neighbors = []

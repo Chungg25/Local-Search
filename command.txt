@@ -1,0 +1,12 @@
+// Random restart hill climbing
+python test.py -s rrhc -p monalisa.jpg
+python test.py -s rrhc -p monalisa.jpg -c 40 40
+
+// Simulated annealing search
+python test.py -s sas -p monalisa.jpg
+python test.py -s sas -p monalisa.jpg -c 41 42
+
+// Local beam search
+python test.py -s lbs -p monalisa.jpg
+python test.py -s lbs -p monalisa.jpg -c 43 34
+

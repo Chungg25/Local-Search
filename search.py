@@ -73,8 +73,7 @@ class LocalSearchStrategy:
             if current_state[0].state_start == state.state_start and current_state[0].evaluation() <= state.evaluation():
                 best_path = state.find_path()
                 break
-            
-                
+        
         return best_path
 
 
