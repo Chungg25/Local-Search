@@ -42,6 +42,7 @@ def test_hill_climbing(title, num_trial=5):
     problem = Problem(img_path)
     best_path = LocalSearchStrategy.random_restart_hill_climbing(problem, num_trial)
     if best_path:
+        print(best_path)
         problem.draw_path(best_path, title)
 
 def test_simulated_annealing_search(title, default_start_state):
@@ -50,8 +51,8 @@ def test_simulated_annealing_search(title, default_start_state):
     if best_path:
         problem.draw_path(best_path, title)
 
-def test_local_beam_search(title, default_start_state, k=5):
-    problem = Problem(img_path, state_start=default_start_state)
+def test_local_beam_search(title, k=5):
+    problem = Problem(img_path)
     best_path = LocalSearchStrategy.local_beam_search(problem, k)
     if best_path:
         problem.draw_path(best_path, title)
@@ -61,5 +62,5 @@ if search_strategy.lower() == 'rrhc':
 elif search_strategy.lower() == 'sas':
     test_simulated_annealing_search('Simulated annealing search', default_start_state=start_state)
 elif search_strategy.lower() == 'lbs':
-    test_local_beam_search('Local beam search', start_state, k=k)
+    test_local_beam_search('Local beam search', k=k)
     

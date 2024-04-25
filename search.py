@@ -49,13 +49,14 @@ class LocalSearchStrategy:
 
 
     def local_beam_search(problem, k):
-        current_state = [problem]
+        current_state = problem.random_k_state(k)
         best_path = []
         while True:
             neighbors = []
             neighbors_state = []
             
             for state in current_state:
+                neighbors_state = []
                 for neighbor in state.get_neighbors():
                     if neighbor.state_start not in neighbors_state:
                         neighbors.append(neighbor)
