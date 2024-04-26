@@ -56,11 +56,17 @@ class Problem:
         return neighbors
 
     def random_state(self):
-        x, y = random.choice(list(zip(self.X, self.Y)))
+        x, y = random.choice(list(self.X)), random.choice(list(self.Y))
         return Problem(filename=self.filename, parent=self, state_start = (x, y))
     
     def random_neighbors(self, neighbors):
         return random.choice(neighbors)
+    
+    def random_k_state(self, k):
+        state = []
+        for _ in range(k):
+            state.append(self.random_state())
+        return state
 
     def show(self, title):
         fig = plt.figure(figsize=(8, 6))
