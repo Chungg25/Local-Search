@@ -48,7 +48,7 @@ class LocalSearchStrategy:
         return start_state.find_path()
 
 
-    def local_beam_search(problem, k):
+def local_beam_search(problem, k):
         current_state = [problem]
         best_path = []
         while True:
@@ -72,7 +72,6 @@ class LocalSearchStrategy:
                 break
         
         return best_path
-
 
 
 
