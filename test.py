@@ -42,7 +42,6 @@ def test_hill_climbing(title, num_trial=5):
     problem = Problem(img_path)
     best_path = LocalSearchStrategy.random_restart_hill_climbing(problem, num_trial)
     if best_path:
-        print(best_path)
         problem.draw_path(best_path, title)
 
 def test_simulated_annealing_search(title, default_start_state):

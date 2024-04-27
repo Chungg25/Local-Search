@@ -53,14 +53,11 @@ class LocalSearchStrategy:
         best_path = []
         while True:
             neighbors = []
-            neighbors_state = []
             
             for state in current_state:
                 neighbors_state = []
                 for neighbor in state.get_neighbors():
-                    if neighbor.state_start not in neighbors_state:
-                        neighbors.append(neighbor)
-                        neighbors_state.append(neighbor.state_start)
+                    neighbors.append(neighbor)
             
             state = current_state[0]
             
