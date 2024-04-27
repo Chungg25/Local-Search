@@ -36,7 +36,7 @@ else:
 
 
 def schedule(T):
-    return T * 0.95
+    return T * 0.9999
 
 def test_hill_climbing(title, num_trial=5):
     problem = Problem(img_path)

@@ -27,9 +27,10 @@ class LocalSearchStrategy:
     def simulated_annealing_search(problem, schedule):
         start_state = problem
         current_energy = int(start_state.evaluation())
+        T = 300
 
-        T = 1000
-        while T > 0.1:
+        while True:
+
             neighbors = []
             T = schedule(T)
             
@@ -39,6 +40,7 @@ class LocalSearchStrategy:
             next_state = start_state.random_neighbors(neighbors)
             next_energy = int(next_state.evaluation())
             delta_e = next_energy - current_energy
+
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 start_state = next_state 
                 current_energy = next_energy
@@ -51,17 +53,21 @@ class LocalSearchStrategy:
     def local_beam_search(problem, k):
         current_state = problem.random_k_state(k)
         best_path = []
+
         while True:
             neighbors = []
-            
+            neighbors_state = []
+
             for state in current_state:
-                neighbors_state = []
                 for neighbor in state.get_neighbors():
-                    neighbors.append(neighbor)
-            
+                    if neighbor.state_start not in neighbors_state:
+                        neighbors.append(neighbor)
+                        neighbors_state.append(neighbor.state_start)
+
             state = current_state[0]
             
             current_state = sorted(neighbors, key=lambda problem: problem.evaluation(), reverse=True)[:k]
+
             if problem.condition(state, current_state[0]):
                 best_path = state.find_path()
                 break
