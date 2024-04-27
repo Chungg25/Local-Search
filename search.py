@@ -62,13 +62,10 @@ class LocalSearchStrategy:
                         neighbors.append(neighbor)
                         neighbors_state.append(neighbor.state_start)
             
-            if current_state[0].parent != None:
-                state = current_state[0].parent
-            else:
-                state = current_state[0]
+            state = current_state[0]
             
             current_state = sorted(neighbors, key=lambda problem: problem.evaluation(), reverse=True)[:k]
-            if current_state[0].state_start == state.state_start and current_state[0].evaluation() <= state.evaluation():
+            if problem.condition(state, current_state[0]):
                 best_path = state.find_path()
                 break
         

@@ -67,6 +67,13 @@ class Problem:
         for _ in range(k):
             state.append(self.random_state())
         return state
+    
+    def condition(self, state, current):
+        if state.parent != None:
+            state_va = state.parent
+        if current.state_start == state_va.state_start and current.evaluation() <= state_va.evaluation():
+            return True
+        return False
 
     def show(self, title):
         fig = plt.figure(figsize=(8, 6))
