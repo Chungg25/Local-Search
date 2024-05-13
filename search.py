@@ -27,7 +27,7 @@ class LocalSearchStrategy:
     def simulated_annealing_search(problem):
         start_state = problem
         current_energy = int(start_state.evaluation())
-        T = 300
+        T = 200
 
         while True:
 

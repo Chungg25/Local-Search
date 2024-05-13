@@ -29,7 +29,7 @@ class Problem:
         return self.Z[y, x]
     
     def schedule(self, T):
-        return T * 0.9999
+        return T * 0.9
 
     def find_path(self):
         p = self
