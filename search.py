@@ -24,7 +24,7 @@ class LocalSearchStrategy:
                 
         return best_path
     
-    def simulated_annealing_search(problem, schedule):
+    def simulated_annealing_search(problem):
         start_state = problem
         current_energy = int(start_state.evaluation())
         T = 300
@@ -32,7 +32,7 @@ class LocalSearchStrategy:
         while True:
 
             neighbors = []
-            T = schedule(T)
+            T = problem.schedule(T)
             
             for neighbor in start_state.get_neighbors():
                 neighbors.append(neighbor)

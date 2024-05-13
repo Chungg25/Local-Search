@@ -34,10 +34,6 @@ if args.maintained_state:
 else:
     k = 5
 
-
-def schedule(T):
-    return T * 0.9999
-
 def test_hill_climbing(title, num_trial=5):
     problem = Problem(img_path)
     best_path = LocalSearchStrategy.random_restart_hill_climbing(problem, num_trial)
@@ -46,7 +42,7 @@ def test_hill_climbing(title, num_trial=5):
 
 def test_simulated_annealing_search(title, default_start_state):
     problem = Problem(img_path, state_start=default_start_state)
-    best_path = LocalSearchStrategy.simulated_annealing_search(problem, schedule)
+    best_path = LocalSearchStrategy.simulated_annealing_search(problem)
     if best_path:
         problem.draw_path(best_path, title)
 

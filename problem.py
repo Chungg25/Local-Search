@@ -27,6 +27,9 @@ class Problem:
     def evaluation(self):
         x, y = self.state_start
         return self.Z[y, x]
+    
+    def schedule(T):
+        return T * 0.9999
 
     def find_path(self):
         p = self
